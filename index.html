@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>inBlooom 圖庫推薦</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf7f2; --surface: #ffffff; --ink: #2b2620; --muted: #7a7166;
+  --line: #e6dfd4; --accent: #b5482f; --accent-soft: #f6e6df; --chip: #f1ece4;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1c1a17; --surface: #262320; --ink: #f0ebe3; --muted: #a59c90;
+    --line: #3a3530; --accent: #e07a5f; --accent-soft: #3d2a24; --chip: #302c28; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font-family: "Noto Sans TC", system-ui, sans-serif; line-height: 1.6; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+header { padding: 48px 0 24px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-size: 13px; letter-spacing: .12em; color: var(--accent); font-weight: 500; }
+h1 { font-family: "Noto Serif TC", serif; font-size: clamp(28px, 5vw, 42px); margin: 6px 0 10px; }
+.lead { color: var(--muted); max-width: 640px; margin: 0; }
+.docs { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; }
+.docs a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+.filters { padding: 20px 0 8px; display: grid; gap: 12px; }
+.frow { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.flabel { font-size: 13px; color: var(--muted); width: 56px; flex-shrink: 0; }
+.chip { border: 1px solid transparent; background: var(--chip); color: var(--ink);
+  font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 999px; cursor: pointer; }
+.chip:hover { border-color: var(--line); }
+.chip[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 0; font-size: 14px; color: var(--muted); flex-wrap: wrap; }
+.bar label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.reset { background: none; border: 0; color: var(--accent); font: inherit; cursor: pointer; padding: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; padding-bottom: 64px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  overflow: hidden; cursor: pointer; text-align: left; padding: 0; font: inherit; color: inherit;
+  transition: transform .15s, box-shadow .15s; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--chip); }
+.cbody { padding: 10px 12px 12px; }
+.code { font-size: 12px; color: var(--muted); }
+.name { font-weight: 500; }
+.tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.tag { font-size: 11px; background: var(--chip); padding: 1px 8px; border-radius: 999px; color: var(--muted); }
+.tag.hot { background: var(--accent-soft); color: var(--accent); }
+.empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 48px 0; }
+dialog { border: 0; border-radius: 12px; padding: 0; max-width: 860px; width: calc(100% - 32px);
+  background: var(--surface); color: var(--ink); }
+dialog::backdrop { background: rgba(20,16,12,.6); }
+.dlg { display: grid; grid-template-columns: 1fr 1fr; }
+.dlg img { width: 100%; height: 100%; max-height: 80vh; object-fit: contain; background: var(--chip); }
+.dinfo { padding: 24px; position: relative; }
+.dinfo h2 { font-family: "Noto Serif TC", serif; margin: 2px 0 12px; font-size: 24px; }
+.pitch { background: var(--accent-soft); border-radius: 8px; padding: 12px 14px; margin: 0 0 16px; font-size: 14px; }
+.kv { display: grid; grid-template-columns: 84px 1fr; gap: 6px 10px; font-size: 14px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+.close { position: absolute; top: 10px; right: 12px; background: none; border: 0; font-size: 24px;
+  color: var(--muted); cursor: pointer; line-height: 1; }
+.note { color: var(--muted); font-size: 14px; }
+@media (max-width: 640px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .dlg { grid-template-columns: 1fr; }
+  .dlg img { max-height: 45vh; }
+  .flabel { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <div class="eyebrow">inBlooom 印花樂</div>
+  <h1>圖庫推薦系統</h1>
+  <p class="lead">依主題、風格、客群與色系篩選印花圖案。點選圖卡可看完整標籤與推薦話術。</p>
+  <div class="docs">
+    <a href="AI自動推薦圖庫.pdf" target="_blank" rel="noopener">建置測試報告 v1（PDF）</a>
+    <a href="inBlooom 圖庫風格詢問單（測試版）.pdf" target="_blank" rel="noopener">圖庫風格詢問單（PDF）</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="filters" id="filters"></section>
+  <div class="bar">
+    <span id="count"></span>
+    <span style="display:flex;gap:16px;align-items:center">
+      <label><input type="checkbox" id="taggedOnly"> 只看已標籤</label>
+      <button class="reset" id="reset">清除篩選</button>
+    </span>
+  </div>
+  <section class="grid" id="grid"></section>
+</main>
+
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+
+<script src="data.js"></script>
+<script>
+const P = window.PATTERNS;
+const GROUPS = [
+  ["themes", "主題"], ["styles", "風格"], ["audience", "客群"], ["colors", "色系"],
+];
+const sel = Object.fromEntries(GROUPS.map(([k]) => [k, new Set()]));
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function buildFilters() {
+  $("filters").innerHTML = GROUPS.map(([k, label]) => {
+    const vals = [...new Set(P.flatMap((p) => p[k] || []))];
+    return `<div class="frow"><span class="flabel">${label}</span>` +
+      vals.map((v) => `<button class="chip" data-k="${k}" data-v="${esc(v)}" aria-pressed="false">${esc(v)}</button>`).join("") +
+      `</div>`;
+  }).join("");
+  $("filters").addEventListener("click", (e) => {
+    const b = e.target.closest(".chip");
+    if (!b) return;
+    const s = sel[b.dataset.k];
+    s.has(b.dataset.v) ? s.delete(b.dataset.v) : s.add(b.dataset.v);
+    b.setAttribute("aria-pressed", s.has(b.dataset.v));
+    render();
+  });
+}
+
+function matches(p) {
+  if ($("taggedOnly").checked && !p.themes) return false;
+  return GROUPS.every(([k]) => {
+    if (!sel[k].size) return true;
+    return (p[k] || []).some((v) => sel[k].has(v));
+  });
+}
+
+function render() {
+  const list = P.filter(matches);
+  const active = GROUPS.some(([k]) => sel[k].size);
+  $("count").textContent = `共 ${list.length} 款` + (active ? "（符合篩選）" : "");
+  $("grid").innerHTML = list.length ? list.map((p) => {
+    const idx = P.indexOf(p);
+    const tags = (p.themes || []).slice(0, 2).map((t) => `<span class="tag${t === "品牌暢銷" ? " hot" : ""}">${esc(t)}</span>`).join("")
+      + (p.styles || []).slice(0, 1).map((t) => `<span class="tag">${esc(t)}</span>`).join("");
+    return `<button class="card" data-i="${idx}">
+      <img src="${encodeURI(p.img)}" alt="${esc(p.name)}" loading="lazy">
+      <div class="cbody"><div class="code">${esc(p.code)}</div><div class="name">${esc(p.name)}</div>
+      <div class="tags">${tags || '<span class="tag">尚未標籤</span>'}</div></div></button>`;
+  }).join("") : `<div class="empty">沒有符合條件的圖案，試著減少篩選條件。</div>`;
+}
+
+function open(i) {
+  const p = P[i];
+  const row = (k, v) => v && (Array.isArray(v) ? v.length : true) ? `<dt>${k}</dt><dd>${esc(Array.isArray(v) ? v.join("、") : v)}</dd>` : "";
+  $("dlgBody").innerHTML = `<img src="${encodeURI(p.img)}" alt="${esc(p.name)}">
+    <div class="dinfo"><button class="close" aria-label="關閉">&times;</button>
+      <div class="code">${esc(p.code)}</div><h2>${esc(p.name)}</h2>
+      ${p.pitch ? `<p class="pitch">${esc(p.pitch)}</p>` : ""}
+      ${p.themes ? `<dl class="kv">
+        ${row("品牌代表性", p.brand)}${row("主題", p.themes)}${row("風格", p.styles)}
+        ${row("畫風", p.art)}${row("圖案密度", p.density)}${row("台灣元素", p.taiwan)}
+        ${row("適合色系", p.colors)}${row("改色容易度", p.recolor)}${row("適合客群", p.audience)}
+        ${row("設計描述", p.story)}</dl>` : `<p class="note">這款圖案尚未建立 metadata 標籤。</p>`}
+    </div>`;
+  $("dlg").showModal();
+}
+
+$("grid").addEventListener("click", (e) => { const c = e.target.closest(".card"); if (c) open(+c.dataset.i); });
+$("dlg").addEventListener("click", (e) => { if (e.target.closest(".close") || e.target === $("dlg")) $("dlg").close(); });
+$("taggedOnly").addEventListener("change", render);
+$("reset").addEventListener("click", () => {
+  GROUPS.forEach(([k]) => sel[k].clear());
+  document.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", "false"));
+  $("taggedOnly").checked = false;
+  render();
+});
+buildFilters();
+render();
+</script>
+</body>
+</html>
